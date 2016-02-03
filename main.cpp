@@ -2,10 +2,12 @@
 #define main SDL_main
 
 #include "GAEngine.h"
+#include <iostream>
+
 
 //Window Height and Width
-const GLsizei	windowWidth = 1600;
-const GLsizei	windowHeight = 900;
+const GLsizei	windowWidth = 1280;
+const GLsizei	windowHeight = 720;
 
 //Navigational variables
 MouseState		mouseState;
@@ -31,6 +33,12 @@ GLboolean		viewportNavigation(GLvoid);
 
 int main(int argc, char **argv)
 {
+
+	//Initializes console Position
+	HWND hWnd = GetConsoleWindow();
+	MoveWindow(hWnd, 1350, 0, 500, 1000, TRUE);
+	std::cout << "GameArtsEngine" << std::endl;
+
 
 	//Initializes SDL and gets everything set up 
 	SDL_Init(SDL_INIT_VIDEO);
