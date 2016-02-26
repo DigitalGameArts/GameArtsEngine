@@ -2,22 +2,27 @@
 #define GA_ENGINE_H
 #define iGAEngine GAEngine::getEngine()
 
-
-//#include "SDL.h"
 #include <windows.h>
+#include <GL/glew.h>
+#include <iostream>
+using namespace std;
+
+#include "SDL.h"
+#include "SDL_image.h"
+#define main SDL_main
+
+
 #include <stdio.h>
 #include <math.h>
-
 #include <list>
 #include <string>
 
-#include <GL/GL.h>
+#include <GL/glew.h>
 #include <GL/GLU.h>
 
-
-#include "Texture.h"
 #include "Light.h"
-
+#include "Shader.h"
+#include "AssimpLoader.h"
 
 struct MouseState {
 	int LeftButtonDown;
@@ -58,17 +63,16 @@ public:
 	GLuint getTextHeight(const char *text);
 
 	GLvoid drawPlane(float x = 0.0f, float y = 0.0f, float z = 0.0f, float width = 10.0f, float height = 10.0f, int divisions = 10);
-	GLvoid drawCube(float x = 0.0f, float y = 0.0f, float z = 0.0f, Texture *texture = nullptr);
+	GLvoid drawCube(float x = 0.0f, float y = 0.0f, float z = 0.0f, unsigned int = NULL);
 
 	GLvoid displayFPS(SDL_Window *window);
 
+	unsigned int loadTexture(const char* filename);
 
 
 
 private:
 	GLuint fontBase;
-
-	Texture *fontTexture;
 
 
 };

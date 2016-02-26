@@ -24,12 +24,7 @@ GLvoid GAEngine::Inititalize(GLint width, GLint height){
 
 	Light::Initialize();
 
-	fontTexture = new Texture("Assets/Textures/font.tga");
-
-
-	buildTextureFont();
 }
-
 
 //Sets ViewPortModes
 GLvoid GAEngine::setOrtho(GLsizei width, GLsizei height){
@@ -72,77 +67,6 @@ GLvoid GAEngine::initGL(GLsizei width, GLsizei height){
 
 }
 
-//TEXT
-GLvoid GAEngine::buildTextureFont(GLvoid){
-
-	fontBase = glGenLists(256);
-	glBindTexture(GL_TEXTURE_2D, fontTexture->texID);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-	for (int i = 0; i < 256; i++){
-
-		float cx = (float)(i % 16) / 16.0f;
-		float cy = (float)(i / 16) / 16.0f;
-
-		glNewList(fontBase + i, GL_COMPILE);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glBegin(GL_QUADS);
-		glTexCoord2f(cx, 1 - cy - 0.0625);	glVertex2i(0, fontsize);
-		glTexCoord2f(cx + 0.0625, 1 - cy - 0.0625);	    glVertex2i(fontsize, fontsize);
-		glTexCoord2f(cx + 0.0625, 1 - cy);			glVertex2i(fontsize, 0);
-		glTexCoord2f(cx, 1 - cy);			glVertex2i(0, 0);
-		glEnd();
-
-		glTranslated(fontSpace - 3, 0, 0);
-
-		glEndList();
-	}
-
-}
-GLvoid GAEngine::drawText(GLint x, GLint y, const char *in_text, ...){
-
-	char text[256];
-
-	va_list ap;
-
-	va_start(ap, in_text);
-	vsprintf_s(text, in_text, ap);
-	va_end(ap);
-
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glBindTexture(GL_TEXTURE_2D, fontTexture->texID);
-
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-
-	glLoadIdentity();
-
-	glTranslated(x, y - 5, 0);
-	glListBase(fontBase - 32);
-	glCallLists((GLsizei)strlen(text), GL_BYTE, text);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glLoadIdentity();
-
-	glDisable(GL_TEXTURE_2D);
-
-
-}
-GLuint GAEngine::getTextWidth(const char *text){
-
-	return GLuint((strlen(text) + 1) * fontSpace);
-}
-GLuint GAEngine::getTextHeight(const char *text){
-
-
-	return (fontsize);
-}
-
 //Displays FPS
 GLvoid GAEngine::displayFPS(SDL_Window *window){
 	static long lastTime = SDL_GetTicks();
@@ -163,7 +87,7 @@ GLvoid GAEngine::displayFPS(SDL_Window *window){
 
 	}
 
-	drawText(5, 5, "FPS: %.2f", fps);
+	//drawText(5, 5, "FPS: %.2f", fps);
 
 
 	loops++;
@@ -198,13 +122,13 @@ GLvoid GAEngine::drawPlane(float x, float y, float z, float width, float height,
 }
 
 //CREATE CUBE OBJECT
-GLvoid GAEngine::drawCube(float x, float y, float z, Texture *texture){
+GLvoid GAEngine::drawCube(float x, float y, float z, unsigned int texture){
 
 	glEnable(GL_TEXTURE_2D);
 
 	// checks if there is a texture to bind
-	if (texture != nullptr)
-		glBindTexture(GL_TEXTURE_2D, texture->texID);
+	if (texture != NULL)
+		glBindTexture(GL_TEXTURE_2D, texture);
 	else{
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -263,6 +187,35 @@ GLvoid GAEngine::drawCube(float x, float y, float z, Texture *texture){
 
 
 	glPopMatrix();
-	//glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
 
+}
+
+unsigned int GAEngine::loadTexture(const char* filename){
+
+	unsigned int id;
+	glGenTextures(1, &id);
+	SDL_Surface* img = IMG_Load(filename);
+
+
+	if (img == NULL){
+		cout << endl << "The image: " << filename << " could not be loaded" << endl;
+		return -1;
+	}
+
+	SDL_PixelFormat form = { SDL_PIXELFORMAT_UNKNOWN, 0, 32, 4, 0, 0, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff };
+	SDL_Surface* convertedImg = SDL_ConvertSurface(img, &form, SDL_SWSURFACE);
+
+	if (convertedImg == NULL){
+		cout << endl << "The conversion of the Image: " << filename << " failed" << endl;
+		return -1;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, convertedImg->w, convertedImg->h, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, convertedImg->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	SDL_FreeSurface(img);
+	SDL_FreeSurface(convertedImg);
+	return id;
 }

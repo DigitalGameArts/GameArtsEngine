@@ -1,0 +1,30 @@
+attribute vec3 vertex;
+attribute vec3 normal;
+attribute vec3 tangent;
+attribute vec3 color;
+attribute vec2 UV;
+
+
+varying vec3 outNormal; 
+varying vec3 outTangent; 
+varying vec3 outColor; 
+varying vec2 outUV; 
+
+
+varying vec2 Texcoord;
+varying vec3 LightDirection;
+uniform vec3 fvLightPosition;
+
+
+void main(void)
+{
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    Texcoord = gl_MultiTexCoord0.xy;
+    vec4 objectPosition = gl_ModelViewMatrix * gl_Vertex;
+   
+    LightDirection = (gl_ModelViewMatrix * vec4(fvLightPosition, 1)).xyz - objectPosition.xyz;  
+
+    outNormal=gl_NormalMatrix * gl_Normal;
+	outColor = color;
+
+}

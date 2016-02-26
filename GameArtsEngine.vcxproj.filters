@@ -13,30 +13,92 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{5c03f0ac-fb64-4f49-9a5e-571ef6f0c3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Color">
+      <UniqueIdentifier>{ee18a1b3-4e07-4023-8047-35b3da0cdada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\lambert_dynamic">
+      <UniqueIdentifier>{cdb0c815-ea0b-44fc-8b0f-579e5b95905d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\lambert_static">
+      <UniqueIdentifier>{8dbeb445-d80d-49f0-88d8-12445a933687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{2ac9b104-f8c4-41d8-bbe9-3788faee103d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{26be8dce-eb33-48b0-aca5-6a084d1cc285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{19e889bc-4a24-4d64-aead-58d92c82c0b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Assimp">
+      <UniqueIdentifier>{f732311f-bb66-497e-b4eb-6d2626b0b581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Assimp">
+      <UniqueIdentifier>{c21d34d2-b22a-4a6f-b637-85c62989918b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GAEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GAEngine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="meshObject.cpp">
+      <Filter>Source Files\Engine\Assimp</Filter>
+    </ClCompile>
+    <ClCompile Include="AssimpLoader.cpp">
+      <Filter>Source Files\Engine\Assimp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="GAEngine.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="meshObject.h">
+      <Filter>Header Files\Engine\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpLoader.h">
+      <Filter>Header Files\Engine\Assimp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Color.frag">
+      <Filter>Resource Files\Shaders\Color</Filter>
+    </None>
+    <None Include="Color.vert">
+      <Filter>Resource Files\Shaders\Color</Filter>
+    </None>
+    <None Include="lambert_dynamic.frag">
+      <Filter>Resource Files\Shaders\lambert_dynamic</Filter>
+    </None>
+    <None Include="lambert_dynamic.vert">
+      <Filter>Resource Files\Shaders\lambert_dynamic</Filter>
+    </None>
+    <None Include="lambert_static.frag">
+      <Filter>Resource Files\Shaders\lambert_static</Filter>
+    </None>
+    <None Include="lambert_static.vert">
+      <Filter>Resource Files\Shaders\lambert_static</Filter>
+    </None>
   </ItemGroup>
 </Project>

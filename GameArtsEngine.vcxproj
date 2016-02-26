@@ -39,8 +39,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>F:\VisualStudioProjects\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\VisualStudioProjects\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Mel-Frederic\Desktop\assimp-3.2\assimp-3.2\include;F:\VisualStudioProjects\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\include;F:\VisualStudioProjects\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Assimp\lib\x86;F:\VisualStudioProjects\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\lib\x86;F:\VisualStudioProjects\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -51,7 +51,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>glu32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2_image.lib;assimp.lib;glew32.lib;glu32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -72,12 +72,25 @@
     <ClCompile Include="GAEngine.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="AssimpLoader.cpp" />
+    <ClCompile Include="meshObject.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GAEngine.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="AssimpLoader.h" />
+    <ClInclude Include="meshObject.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Vector3.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Color.frag" />
+    <None Include="Color.vert" />
+    <None Include="lambert_dynamic.frag" />
+    <None Include="lambert_dynamic.vert" />
+    <None Include="lambert_static.frag" />
+    <None Include="lambert_static.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
