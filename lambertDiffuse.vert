@@ -8,10 +8,9 @@ attribute vec2 UV;
 varying vec3 outNormal; 
 varying vec3 outTangent; 
 varying vec3 outColor; 
-varying vec2 outUV; 
-
 
 varying vec2 Texcoord;
+
 varying vec3 LightDirection;
 uniform vec3 fvLightPosition;
 
@@ -27,5 +26,5 @@ void main(void)
     outNormal = gl_NormalMatrix * normal;
 	outTangent= gl_NormalMatrix * tangent;
 	outColor = color;
-	outUV=UV;
+	Texcoord = UV;
 }

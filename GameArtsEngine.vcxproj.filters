@@ -40,6 +40,12 @@
     <Filter Include="Header Files\Engine\Assimp">
       <UniqueIdentifier>{c21d34d2-b22a-4a6f-b637-85c62989918b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\normalSimple">
+      <UniqueIdentifier>{7bbc0e72-e218-40c0-a303-6f8d07d10506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\normalSpec">
+      <UniqueIdentifier>{e40aba67-743c-49e0-be56-1c1d4c4deb2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -88,17 +94,29 @@
     <None Include="Color.vert">
       <Filter>Resource Files\Shaders\Color</Filter>
     </None>
-    <None Include="lambert_dynamic.frag">
-      <Filter>Resource Files\Shaders\lambert_dynamic</Filter>
-    </None>
-    <None Include="lambert_dynamic.vert">
-      <Filter>Resource Files\Shaders\lambert_dynamic</Filter>
-    </None>
     <None Include="lambert_static.frag">
       <Filter>Resource Files\Shaders\lambert_static</Filter>
     </None>
     <None Include="lambert_static.vert">
       <Filter>Resource Files\Shaders\lambert_static</Filter>
+    </None>
+    <None Include="lambertDiffuse.frag">
+      <Filter>Resource Files\Shaders\lambert_dynamic</Filter>
+    </None>
+    <None Include="lambertDiffuse.vert">
+      <Filter>Resource Files\Shaders\lambert_dynamic</Filter>
+    </None>
+    <None Include="normal.frag">
+      <Filter>Resource Files\Shaders\normalSimple</Filter>
+    </None>
+    <None Include="normalSpec.frag">
+      <Filter>Resource Files\Shaders\normalSpec</Filter>
+    </None>
+    <None Include="normalSpec.vert">
+      <Filter>Resource Files\Shaders\normalSpec</Filter>
+    </None>
+    <None Include="normal.vert">
+      <Filter>Resource Files\Shaders\normalSimple</Filter>
     </None>
   </ItemGroup>
 </Project>

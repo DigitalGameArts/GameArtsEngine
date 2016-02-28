@@ -63,7 +63,7 @@ public:
 	GLuint getTextHeight(const char *text);
 
 	GLvoid drawPlane(float x = 0.0f, float y = 0.0f, float z = 0.0f, float width = 10.0f, float height = 10.0f, int divisions = 10);
-	GLvoid drawCube(float x = 0.0f, float y = 0.0f, float z = 0.0f, unsigned int = NULL);
+	GLvoid drawCube(float x = 0.0f, float y = 0.0f, float z = 0.0f, GLhandleARB p = NULL, unsigned int = NULL, unsigned int = NULL);
 
 	GLvoid displayFPS(SDL_Window *window);
 

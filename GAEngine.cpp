@@ -122,16 +122,29 @@ GLvoid GAEngine::drawPlane(float x, float y, float z, float width, float height,
 }
 
 //CREATE CUBE OBJECT
-GLvoid GAEngine::drawCube(float x, float y, float z, unsigned int texture){
+GLvoid GAEngine::drawCube(float x, float y, float z, GLhandleARB p , unsigned int texture, unsigned int normalMap){
 
 	glEnable(GL_TEXTURE_2D);
+	glUseProgram(p);
 
 	// checks if there is a texture to bind
-	if (texture != NULL)
+	/*if (texture != NULL){
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
+	}
+		
 	else{
 		glDisable(GL_TEXTURE_2D);
 	}
+	
+	if (normalMap != NULL){
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalMap);
+	}
+	else{
+		glDisable(GL_TEXTURE_2D);
+	}*/
+
 
 	glPushMatrix();
 	glTranslatef(x, y, z);
@@ -186,6 +199,10 @@ GLvoid GAEngine::drawCube(float x, float y, float z, unsigned int texture){
 	glEnd();
 
 
+	glActiveTexture(NULL);
+	glActiveTexture(NULL);
+
+
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
@@ -210,12 +227,14 @@ unsigned int GAEngine::loadTexture(const char* filename){
 		cout << endl << "The conversion of the Image: " << filename << " failed" << endl;
 		return -1;
 	}
-
+	
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, convertedImg->w, convertedImg->h, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, convertedImg->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	SDL_FreeSurface(img);
 	SDL_FreeSurface(convertedImg);
+
+
 	return id;
 }

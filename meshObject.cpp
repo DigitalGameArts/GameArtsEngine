@@ -40,14 +40,52 @@ void meshObject::draw(unsigned int programId){
 
 
 
-	/*string str = "texture";
-	for (int i = 0; i < textures.size(); i++){
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-		glUniform1i(glGetUniformLocation(programId,(str+(char)(i + '0')).c_str()), i);
 
-		cout << (str + (char)(i + '0')).c_str() << endl;
-	}*/
+	// Binds Textures to the shader according to its Type
+	string diffuseString = "diffuseMap";
+	string normalString = "normalMap";
+	string specularString = "specularMap";
+
+	if (textures.size() > 0){
+		for (int i = 0; i < textures.size(); i++){
+			
+			if (textures[i].type == 0) // 0 indicates that its a diffuse map -> PlEASE CHANGE TO ENUM
+			{
+
+				//glActiveTexture(GL_TEXTURE0+i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textures[i].id);
+				glUniform1i(glGetUniformLocation(programId, (diffuseString + (char)(i + '0')).c_str()), i);
+
+
+			}
+			if (textures[i].type == 1) // 1 indicates that its a normal map -> PlEASE CHANGE TO ENUM 
+			{
+				//glActiveTexture(GL_TEXTURE0+i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textures[i].id);
+				glUniform1i(glGetUniformLocation(programId, (normalString + (char)(i + '0')).c_str()), i);
+
+			}
+			if (textures[i].type == 2) // 1 indicates that its a normal map -> PlEASE CHANGE TO ENUM 
+			{
+				//glActiveTexture(GL_TEXTURE0+i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textures[i].id);
+				glUniform1i(glGetUniformLocation(programId, (specularString + (char)(i + '0')).c_str()), i);
+
+			}
+	
+			//cout << textures[i].id << endl;
+			//cout << (str + (char)(i + '0')).c_str() << endl;
+		}
+	}
+	else{
+		glActiveTexture(NULL);
+		glDisable(GL_TEXTURE_2D);
+	}
+	
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IND);
@@ -82,4 +120,6 @@ void meshObject::draw(unsigned int programId){
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
+	
 }

@@ -25,17 +25,24 @@ GLboolean		viewportNavigation(GLvoid);
 
 //Textures
 unsigned int	crateTexture;
+unsigned int	defaultTexture;
+unsigned int	cratenormalTexture;
 
 //Shaders
 Shader			*lambertShader_static;
-Shader			*lambertShader_dynamic;
-
+Shader			*diffuseShader;
+Shader			*normalShader;
+Shader			*normalSpecShader;
 
 //Meshes->Primitives
 meshLoader		*teapodModel;
 meshLoader		*cylinderModel;
 meshLoader		*sphereModel;
 meshLoader		*cubeModel;
+
+
+//Meshes->GameModels
+meshLoader		*bremerWall;
 
 
 int main(int argc, char **argv)
@@ -71,33 +78,52 @@ int main(int argc, char **argv)
 
 	
 	//Load Textures
-	crateTexture = iGAEngine->loadTexture("Assets/Textures/crate_texture.tga");
+	defaultTexture = iGAEngine->loadTexture("Assets/Textures/ModelgridTexture.jpg");
 
-	//Load Models->Primitives
-	teapodModel = new meshLoader("Assets/Models/Primitives/teapod.dae");
+	//Load Models->Primitives ------------------------ENABLE IF YOU NEED PRIMITIVES---------------------------------
+	/*teapodModel = new meshLoader("Assets/Models/Primitives/teapod.dae");
 	cylinderModel = new meshLoader("Assets/Models/Primitives/cylinder.dae");
 	sphereModel = new meshLoader("Assets/Models/Primitives/sphere.dae");
-	cubeModel = new meshLoader("Assets/Models/Primitives/cube.dae");
+	cubeModel = new meshLoader("Assets/Models/Primitives/cube.dae");*/
+	
 
+	//Load Models->GameModels
+	bremerWall = new meshLoader("Assets/Models/test/bremerWall.dae");
 	//-----------------------------------------------------------------------------------------SHADERSETUP--------------------------------------------
 	
 	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader){
 
 		cout << endl << "SHADER LOG: -------------------------------------------------------- BEGIN" << endl;
+		
+		// Simple Normal Shader without SpecMap
+		normalShader = new Shader("normal.vert", "normal.frag");
+		normalShader->useShader();
+		normalShader->setAttribute1i("diffuseMap0", 0);
+		normalShader->setAttribute1i("normalMap1", 1);
+		normalShader->setAttribute1f("SpecularPower", 2.0f);
+		normalShader->setAttribute4f("Specular", 0.5, 0.5, 0.5, 1.0);
+		normalShader->setAttribute4f("Ambient", 0.3, 0.3, 0.3, 1.0);
+		normalShader->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
+		normalShader->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
 
-		lambertShader_static = new Shader("Color.vert", "Color.frag");
-		lambertShader_static->useShader();
-		lambertShader_static->setAttribute1i("cloudTexture", 0);
-		lambertShader_static->setAttribute4f("Ambient", 1, 1, 1, 1.0);
-		lambertShader_static->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
-		lambertShader_static->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
+		// Normal Shader with SpecMap
+		normalSpecShader = new Shader("normalSpec.vert", "normalSpec.frag");
+		normalSpecShader->useShader();
+		normalSpecShader->setAttribute1i("diffuseMap0", 0);
+		normalSpecShader->setAttribute1i("normalMap1", 1);
+		normalSpecShader->setAttribute1i("specularMap2", 2);
+		normalSpecShader->setAttribute1f("SpecularPower", 2.0f);
+		normalSpecShader->setAttribute4f("Specular", 0.5, 0.5, 0.5, 1.0);
+		normalSpecShader->setAttribute4f("Ambient", 0.3, 0.3, 0.3, 1.0);
+		normalSpecShader->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
+		normalSpecShader->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
 
-
-		lambertShader_dynamic = new Shader("lambert_dynamic.vert", "lambert_dynamic.frag");
-		lambertShader_dynamic->useShader();
-		lambertShader_dynamic->setAttribute4f("Ambient", 0.3, 0.3, 0.3, 1.0);
-		lambertShader_dynamic->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
-		lambertShader_dynamic->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
+		// Simple LambertShader with DiffuseMap
+		diffuseShader = new Shader("lambertDiffuse.vert", "lambertDiffuse.frag");
+		diffuseShader->useShader();
+		diffuseShader->setAttribute4f("Ambient", 0.3, 0.3, 0.3, 1.0);
+		diffuseShader->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
+		diffuseShader->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
 		
 		cout << endl << "SHADER LOG: ---------------------------------------------------------- END" << endl;
 
@@ -127,7 +153,7 @@ int main(int argc, char **argv)
 		mouseState.RightButtonDown = SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(3);
 
 		drawMainScene(window); // calls stuff that needs to update every frame
-
+		
 		//Event loop
 		while (SDL_PollEvent(&event)){
 
@@ -142,7 +168,9 @@ int main(int argc, char **argv)
 
 	delete teapodModel;
 	delete lambertShader_static;
-	delete lambertShader_dynamic;
+	delete diffuseShader;
+	delete normalShader;
+	delete normalSpecShader;
 
 	GAEngine::Unitialize();
 
@@ -165,6 +193,7 @@ GLvoid drawMainScene(SDL_Window *window){
 	glLoadIdentity();
 	glDisable(GL_BLEND);
 
+
 	glTranslatef(0, 0, zoom);
 	glRotatef(rotateX, 1, 0, 0);
 	glRotatef(rotateY, 0, 1, 0);
@@ -178,37 +207,14 @@ GLvoid drawMainScene(SDL_Window *window){
 
 
 	//Draws Geometry
-	
-	lambertShader_dynamic->useShader();
+	normalSpecShader->useShader();
 	glPushMatrix();
-	glTranslatef(0, 0, 6);
-	teapodModel->draw(lambertShader_dynamic->getShaderProgram());
+	glTranslatef(0, 0, 0);
+	bremerWall->draw(normalSpecShader->getShaderProgram());
 	glPopMatrix();
-	lambertShader_dynamic->disableShaders();
+	normalSpecShader->disableShaders();
 
-	lambertShader_dynamic->useShader();
-	glPushMatrix();
-	glTranslatef(0, 0, 2);
-	cylinderModel->draw(lambertShader_dynamic->getShaderProgram());
-	glPopMatrix();
-	lambertShader_dynamic->disableShaders();
-
-	lambertShader_dynamic->useShader();
-	glPushMatrix();
-	glTranslatef(0, 2, -2);
-	sphereModel->draw(lambertShader_dynamic->getShaderProgram());
-	glPopMatrix();
-	lambertShader_dynamic->disableShaders();
-
-	lambertShader_dynamic->useShader();
-	glPushMatrix();
-	glTranslatef(0, 0, -6);
-	cubeModel->draw(lambertShader_dynamic->getShaderProgram());
-	glPopMatrix();
-	lambertShader_dynamic->disableShaders();
-
-
-	//iGAEngine->drawCube(0, 1, -5, crateTexture);
+	//iGAEngine->drawCube(0, 1, 0, NULL);
 	iGAEngine->drawPlane(0, 0, 0, 20, 20, 20);
 
 																		//3D//

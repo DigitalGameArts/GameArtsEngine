@@ -87,10 +87,14 @@
   <ItemGroup>
     <None Include="Color.frag" />
     <None Include="Color.vert" />
-    <None Include="lambert_dynamic.frag" />
-    <None Include="lambert_dynamic.vert" />
+    <None Include="lambertDiffuse.frag" />
+    <None Include="lambertDiffuse.vert" />
     <None Include="lambert_static.frag" />
     <None Include="lambert_static.vert" />
+    <None Include="normal.frag" />
+    <None Include="normal.vert" />
+    <None Include="normalSpec.frag" />
+    <None Include="normalSpec.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

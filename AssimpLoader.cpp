@@ -22,6 +22,8 @@ meshLoader::meshLoader(const char* filename){
 		return;
 	}
 	
+
+	cout << endl << endl << filename << endl;
 	recursiveProcess(scene->mRootNode, scene);
 
 }
@@ -108,7 +110,6 @@ void meshLoader::processMesh(aiMesh* mesh, const aiScene* scene){
 		}
 		tmp.color = tmpVec;
 
-
 		if (mesh->mTextureCoords[0]){
 			tmpVec.x = mesh->mTextureCoords[0][i].x;
 			tmpVec.y = mesh->mTextureCoords[0][i].y;
@@ -135,17 +136,60 @@ void meshLoader::processMesh(aiMesh* mesh, const aiScene* scene){
 	}
 
 	//aiMaterial* mat = scene->mMaterials[mesh->mMaterialIndex];
-	for (int i = 0; i < mat->GetTextureCount(aiTextureType_DIFFUSE); i++){
-		aiString str;
-		mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-		textureData tmp;
-		
 
-		tmp.id = loadTexture(str.C_Str());
-		tmp.type = 0;
-		textures.push_back(tmp);
+	cout << "Amount of Diffuse Maps: " << mat->GetTextureCount(aiTextureType_DIFFUSE) << endl;
+	cout << "Amount of Normal Maps: " << mat->GetTextureCount(aiTextureType_OPACITY) << endl; // For now we need to use opacity...internal max collada issue!
+	cout << "Amount of Specular Maps: " << mat->GetTextureCount(aiTextureType_SPECULAR) << endl;
+
+	cout << "total amount of maps: " << (mat->GetTextureCount(aiTextureType_DIFFUSE) + mat->GetTextureCount(aiTextureType_OPACITY) + mat->GetTextureCount(aiTextureType_SPECULAR) ) << endl;
+
+	if ((mat->GetTextureCount(aiTextureType_DIFFUSE) + mat->GetTextureCount(aiTextureType_OPACITY) + mat->GetTextureCount(aiTextureType_SPECULAR)) > 0){
+		
+		for (int i = 0; i < mat->GetTextureCount(aiTextureType_DIFFUSE); i++){
+			
+			aiString str;
+			mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
+			
+			textureData tmp;
+			tmp.id = loadTexture(str.C_Str(),true);
+			tmp.type = 0;
+			textures.push_back(tmp);
+
+		}
+
+		for (int i = 0; i < mat->GetTextureCount(aiTextureType_OPACITY); i++){  // again its actually looking for the normal maps not opacity
+			aiString str;
+			mat->GetTexture(aiTextureType_OPACITY, i, &str);
+
+			textureData tmp;
+			tmp.id = loadTexture(str.C_Str(),true);
+			tmp.type = 1;
+			textures.push_back(tmp);
+
+		}
+
+		//SpecComponent
+		for (int i = 0; i < mat->GetTextureCount(aiTextureType_SPECULAR); i++){  // again its actually looking for the normal maps not opacity
+			aiString str;
+			mat->GetTexture(aiTextureType_SPECULAR, i, &str);
+
+			textureData tmp;
+			tmp.id = loadTexture(str.C_Str(),true);
+			tmp.type = 2;
+			textures.push_back(tmp);
+
+		}
+
+
 
 	}
+	else{
+		textureData tmp;
+		tmp.id = DEFAULTTEXTURE;
+		textures.push_back(tmp);
+	}
+	
+
 	meshes.push_back(new meshObject(&data, &indices, &textures));
 
 	
@@ -161,7 +205,7 @@ void meshLoader::draw(unsigned int programId){
 }
 
 
-unsigned int meshLoader::loadTexture(const char* filename){
+/*unsigned int meshLoader::loadTexture(const char* filename){
 
 	unsigned int id;
 	glGenTextures(1, &id);
@@ -181,15 +225,67 @@ unsigned int meshLoader::loadTexture(const char* filename){
 		return -1;
 	}
 
+	cout << "TextureID: " << id << endl;
+
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, convertedImg->w, convertedImg->h, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, convertedImg->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	SDL_FreeSurface(img);
 	SDL_FreeSurface(convertedImg);
+	
 	return id; 
 
-		return 1;
+}*/
+
+unsigned int meshLoader::loadTexture(const char* filename, bool generate){
+
+	unsigned int id;
+	glGenTextures(1, &id);
+	SDL_Surface* img = IMG_Load(filename);
+
+
+	if (img == NULL){
+		cout << endl << "The image: " << filename << " could not be loaded" << endl;
+		return -1;
+	}
+
+	SDL_PixelFormat form = { SDL_PIXELFORMAT_UNKNOWN, 0, 32, 4, 0, 0, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff };
+	SDL_Surface* convertedImg = SDL_ConvertSurface(img, &form, SDL_SWSURFACE);
+
+	if (convertedImg == NULL){
+		cout << endl << "The conversion of the Image: " << filename << " failed" << endl;
+		return -1;
+	}
+
+	cout << "TextureID: " << id << endl;
+
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, convertedImg->w, convertedImg->h, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, convertedImg->pixels);
+
+	if (generate)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	else
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	/*if (generate)
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, convertedImg->w, convertedImg->h, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, convertedImg->pixels);
+	else
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, convertedImg->w, convertedImg->h, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, convertedImg->pixels);*/
+	
+
+	if (generate)
+		glGenerateMipmap(GL_TEXTURE_2D);
+	
+	
+	SDL_FreeSurface(img);
+	SDL_FreeSurface(convertedImg);
+
+	return id;
+
 }
 
 

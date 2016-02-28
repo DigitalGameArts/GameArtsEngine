@@ -13,12 +13,17 @@
 #include "SDL_image.h"
 
 
+enum{
+	DEFAULTTEXTURE = 1,
+};
+
 class meshLoader{
 	vector<meshObject*> meshes;
 
 	void recursiveProcess(aiNode* node, const aiScene* scene);
 	void processMesh(aiMesh* mesh, const aiScene* scene);
-	unsigned int loadTexture(const char* filename);
+	//unsigned int loadTexture(const char* filename);
+	unsigned int loadTexture(const char* filename, bool generate = false);
 
 public:
 	meshLoader(const char* filename);
