@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(ProjectDir)\Dependencies\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\Dependencies\Debug_Dir;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)\Dependencies\Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

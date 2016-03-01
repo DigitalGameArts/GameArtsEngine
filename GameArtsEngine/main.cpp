@@ -9,7 +9,7 @@ const GLsizei	windowHeight = 720;
 MouseState		mouseState;
 GLfloat			rotateX = 45.0f;
 GLfloat			rotateY = 45.0f;
-GLfloat			zoom = -15.0f;
+GLfloat			zoom = -20.0f;
 const float		speed = 5.0f;
 bool			navigating = false;
 const float		rotateX_speed = 0.5f;
