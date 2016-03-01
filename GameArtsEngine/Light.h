@@ -1,7 +1,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "SDL.h"
+#include "SDL/SDL.h"
 
 #include <windows.h>
 #include <stdio.h>

@@ -9,8 +9,8 @@
 
 
 #include "meshObject.h"
-#include "SDL.h" 
-#include "SDL_image.h"
+#include "SDL/SDL.h" 
+#include "SDL_IMAGE/SDL_image.h"
 
 
 enum{

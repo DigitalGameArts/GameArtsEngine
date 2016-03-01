@@ -65,6 +65,12 @@ int main(int argc, char **argv)
 	//Initializes our Engine
 	iGAEngine->initGL(windowWidth, windowHeight);
 
+	aiString list;
+	Assimp::Importer imp;
+	imp.GetExtensionList(list);
+	std::cout << list.C_Str() << std::endl;
+
+
 
 
 										/**************************************ALL THE ONE TIME SCENE SETUP GOES HERE*******************************************/
