@@ -42,7 +42,7 @@ meshLoader		*cubeModel;
 
 
 //Meshes->GameModels
-meshLoader		*bremerWall;
+
 
 
 int main(int argc, char **argv)
@@ -87,14 +87,14 @@ int main(int argc, char **argv)
 	defaultTexture = iGAEngine->loadTexture("Assets/Textures/ModelgridTexture.jpg");
 
 	//Load Models->Primitives ------------------------ENABLE IF YOU NEED PRIMITIVES---------------------------------
-	/*teapodModel = new meshLoader("Assets/Models/Primitives/teapod.dae");
+	teapodModel = new meshLoader("Assets/Models/Primitives/teapod.dae");
 	cylinderModel = new meshLoader("Assets/Models/Primitives/cylinder.dae");
 	sphereModel = new meshLoader("Assets/Models/Primitives/sphere.dae");
-	cubeModel = new meshLoader("Assets/Models/Primitives/cube.dae");*/
+	cubeModel = new meshLoader("Assets/Models/Primitives/cube.dae");
 	
 
 	//Load Models->GameModels
-	bremerWall = new meshLoader("Assets/Models/test/bremerWall.dae");
+
 	//-----------------------------------------------------------------------------------------SHADERSETUP--------------------------------------------
 	
 	if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader){
@@ -130,6 +130,13 @@ int main(int argc, char **argv)
 		diffuseShader->setAttribute4f("Ambient", 0.3, 0.3, 0.3, 1.0);
 		diffuseShader->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
 		diffuseShader->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
+
+
+		lambertShader_static = new Shader("lambert_static.vert", "lambert_static.frag");
+		lambertShader_static->useShader();
+		lambertShader_static->setAttribute4f("Ambient", 0.3, 0.3, 0.3, 1.0);
+		lambertShader_static->setAttribute4f("Diffuse", 1, 1, 1, 1.0);
+		lambertShader_static->setAttribute3f("fvLightPosition", 50.3f, 18.9f, 27.2f);
 		
 		cout << endl << "SHADER LOG: ---------------------------------------------------------- END" << endl;
 
@@ -213,12 +220,38 @@ GLvoid drawMainScene(SDL_Window *window){
 
 
 	//Draws Geometry
-	normalSpecShader->useShader();
+
+
+	lambertShader_static->useShader();
 	glPushMatrix();
-	glTranslatef(0, 0, 0);
-	bremerWall->draw(normalSpecShader->getShaderProgram());
+	glTranslatef(0, 0, -6);
+	teapodModel->draw(lambertShader_static->getShaderProgram());
 	glPopMatrix();
-	normalSpecShader->disableShaders();
+	lambertShader_static->disableShaders();
+
+
+	lambertShader_static->useShader();
+	glPushMatrix();
+	glTranslatef(0, 2, -1);
+	sphereModel->draw(lambertShader_static->getShaderProgram());
+	glPopMatrix();
+	lambertShader_static->disableShaders();
+
+	lambertShader_static->useShader();
+	glPushMatrix();
+	glTranslatef(0, 0, 3);
+	cylinderModel->draw(lambertShader_static->getShaderProgram());
+	glPopMatrix();
+	lambertShader_static->disableShaders();
+
+
+	lambertShader_static->useShader();
+	glPushMatrix();
+	glTranslatef(0, 0, 7);
+	cubeModel->draw(lambertShader_static->getShaderProgram());
+	glPopMatrix();
+	lambertShader_static->disableShaders();
+
 
 	//iGAEngine->drawCube(0, 1, 0, NULL);
 	iGAEngine->drawPlane(0, 0, 0, 20, 20, 20);

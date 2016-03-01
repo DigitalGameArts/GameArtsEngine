@@ -19,10 +19,10 @@ void main(void)
    vec4 diffuseColor = texture2D(cloudTexture,Texcoord);
    vec4 lightColor = diffuseColor * Diffuse * facingRatio; 
    
-    gl_FragColor = lightColor + Ambient * diffuseColor;
+    //gl_FragColor = lightColor + Ambient * diffuseColor;
  
-   //gl_FragColor = lightColor + Ambient * vec4(outColor,1.0);
-  // gl_FragColor =   vec4(outColor,1.0) + lightColor;
+     gl_FragColor = lightColor + Ambient * vec4(outColor,1.0);
+    //gl_FragColor =   vec4(outColor,1.0) + lightColor;
 }
 
 

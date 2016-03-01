@@ -18,13 +18,13 @@ uniform vec3 fvLightPosition;
 
 void main(void)
 {
-    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    gl_Position = gl_ModelViewProjectionMatrix * vec4(vertex,1.0);
     Texcoord = gl_MultiTexCoord0.xy;
-    vec4 objectPosition = gl_ModelViewMatrix * gl_Vertex;
+    vec4 objectPosition = gl_ModelViewMatrix * vec4(vertex,1.0);
    
     LightDirection = (gl_ModelViewMatrix * vec4(fvLightPosition, 1)).xyz - objectPosition.xyz;  
 
-    outNormal=gl_NormalMatrix * gl_Normal;
+    outNormal=gl_NormalMatrix * normal;
 	outColor = color;
 
 }
